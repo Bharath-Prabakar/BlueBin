@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema - BlueBin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='schema.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="app-bar">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='img/logo4.png') }}" alt="BlueBin Logo">
+      <span>BlueBin</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('login') }}">Home</a></li>
+      <li><a href="{{ url_for('status') }}">Status</a></li>
+      <li><a href="{{ url_for('location') }}">Location</a></li>
+      <li><a href="{{ url_for('schema') }}" class="active">Schema</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content" style="margin-top: 100px;">
+    <h1 class="page-heading">Database Schema</h1>
+
+    <!-- Display DUSTBIN_INFO Table -->
+    <div class="table-container">
+      <h2>DUSTBIN_INFO</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>BIN_ID</th>
+            <th>LOCATION_NAME</th>
+            <th>LATITUDE</th>
+            <th>LONGITUDE</th>
+            <th>LAST_FILL_LEVEL</th>
+            <th>WASTE_TYPE</th>
+            <th>LAST_UPDATED</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in dustbin_info %}
+          <tr>
+            <td>{{ row.BIN_ID }}</td>
+            <td>{{ row.LOCATION_NAME }}</td>
+            <td>{{ row.LATITUDE }}</td>
+            <td>{{ row.LONGITUDE }}</td>
+            <td>{{ row.LAST_FILL_LEVEL }}</td>
+            <td>{{ row.WASTE_TYPE }}</td>
+            <td>{{ row.LAST_UPDATED }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Display COLLECTION_ROUTE Table -->
+    <div class="table-container">
+      <h2>COLLECTION_ROUTE</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ROUTE_ID</th>
+            <th>TRUCK_ID</th>
+            <th>SELECTED_BINS</th>
+            <th>TOTAL_DISTANCE</th>
+            <th>ROUTE_PATH</th>
+            <th>ROUTE_DATE</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in collection_route %}
+          <tr>
+            <td>{{ row.ROUTE_ID }}</td>
+            <td>{{ row.TRUCK_ID }}</td>
+            <td>{{ row.SELECTED_BINS }}</td>
+            <td>{{ row.TOTAL_DISTANCE }}</td>
+            <td>{{ row.ROUTE_PATH }}</td>
+            <td>{{ row.ROUTE_DATE }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Display SENSOR_LOGS Table -->
+    <div class="table-container">
+      <h2>SENSOR_LOGS</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>LOG_ID</th>
+            <th>BIN_ID</th>
+            <th>FILL_LEVEL</th>
+            <th>TIMESTAMP</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in sensor_logs %}
+          <tr>
+            <td>{{ row.LOG_ID }}</td>
+            <td>{{ row.BIN_ID }}</td>
+            <td>{{ row.FILL_LEVEL }}</td>
+            <td>{{ row.TIMESTAMP }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  <!-- Add and Delete Dustbin Section -->
+<div class="add-delete-container">
+  <!-- Add Dustbin Div -->
+  <div class="add-dustbin">
+    <h2>Add New Dustbin</h2>
+    <form id="add-dustbin-form">
+      <label for="bin-id">BIN_ID:</label>
+      <input type="text" id="bin-id" name="bin-id" required>
+
+      <label for="location-name">Location Name:</label>
+      <input type="text" id="location-name" name="location-name" required>
+
+      <label for="latitude">Latitude:</label>
+      <input type="number" id="latitude" name="latitude" step="0.000001" required>
+
+      <label for="longitude">Longitude:</label>
+      <input type="number" id="longitude" name="longitude" step="0.000001" required>
+
+      <label for="waste-type">Waste Type:</label>
+      <select id="waste-type" name="waste-type" required>
+        <option value="BIODEGRADABLE">BIODEGRADABLE</option>
+        <option value="NON-BIODEGRADABLE">NON-BIODEGRADABLE</option>
+      </select>
+
+      <button type="submit">Add Dustbin</button>
+    </form>
+  </div>
+
+  <!-- Delete Dustbin Div -->
+  <div class="delete-dustbin">
+    <h2>Delete Dustbin</h2>
+    <form id="delete-dustbin-form">
+      <label for="delete-bin-id">BIN_ID:</label>
+      <input type="text" id="delete-bin-id" name="delete-bin-id" required>
+
+      <label for="delete-location-name">Location Name:</label>
+      <input type="text" id="delete-location-name" name="delete-location-name" required>
+
+      <button type="submit">Delete Dustbin</button>
+    </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('add-dustbin-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const binId = document.getElementById('bin-id').value;
+    const locationName = document.getElementById('location-name').value;
+    const latitude = parseFloat(document.getElementById('latitude').value);
+    const longitude = parseFloat(document.getElementById('longitude').value);
+    const wasteType = document.getElementById('waste-type').value;
+
+    // Validate Chennai Region (Latitude: 12.8 to 13.2, Longitude: 80.1 to 80.3)
+    if (latitude < 12.8 || latitude > 13.2 || longitude < 80.1 || longitude > 80.3) {
+      alert('Dustbin location should be within Chennai region.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/add-dustbin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          binId,
+          locationName,
+          latitude,
+          longitude,
+          wasteType,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('New dustbin added to the database.');
+        location.reload(); // Refresh the page to show the updated table
+      } else {
+        alert(result.message || 'Failed to add dustbin.');
+      }
+    } catch (error) {
+      alert('An error occurred while adding the dustbin.');
+    }
+  });
+
+  // Delete Dustbin Form Submission
+  document.getElementById('delete-dustbin-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const binId = document.getElementById('delete-bin-id').value;
+    const locationName = document.getElementById('delete-location-name').value;
+
+    try {
+      const response = await fetch('/delete-dustbin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          binId,
+          locationName,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert('One record removed from the database.');
+        location.reload(); // Refresh the page to show the updated table
+      } else {
+        alert(result.message || 'No such dustbin exists.');
+      }
+    } catch (error) {
+      alert('An error occurred while deleting the dustbin.');
+    }
+  });
+  </script>
+
+
+
+  </div>
+</body>
+</html>

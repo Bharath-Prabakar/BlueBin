@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueBin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="app-bar">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='img/logo4.png') }}" alt="BlueBin Logo">
+      <span>BlueBin</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('login') }}" class="active">Home</a></li>
+      <li><a href="{{ url_for('status') }}">Status</a></li>
+      <li><a href="{{ url_for('location') }}">Location</a></li>
+      <li><a href="{{ url_for('schema') }}">Schema</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="website-name">
+      <span class="blue">BLUE</span><span class="white">BIN</span>
+    </div>
+
+    <div class="tagline">
+      Efficiency in waste collection, sustainability in action.
+    </div>
+
+    <div class="description">
+      BlueBin revolutionizes waste management by optimizing collection routes, reducing costs, and promoting eco-friendly practices. Join us in making the world a cleaner place!
+    </div>
+
+    
+  </div>
+</body>
+</html>

@@ -1,0 +1,433 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  
+}
+
+
+/* Body Styling */
+body {
+    background-image: url("/static/img/loc_bg3.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Fix the background image */
+    min-height: 100vh; /* Ensure body covers at least the viewport height */
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    overflow-y: auto; /* Make body scrollable */
+  }
+
+/* Navigation Bar */
+.app-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 10% 20px 45px;
+  background: transparent;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: #1e90ff;
+  bottom: -5px;
+  left: 0;
+  transition: width 0.3s ease;
+}
+
+.nav-links li a:hover::after,
+.nav-links li a.active::after {
+  width: 100%;
+}
+
+.nav-links li a:hover {
+  color: #1e90ff;
+}
+
+/* Main Content */
+.content {
+  padding-top: 100px; /* Add padding to avoid overlap with fixed navbar */
+  text-align: center;
+}
+
+/* Heading Styling */
+.heading {
+  margin-bottom: 150px;
+  margin-top: 40px;
+}
+
+.heading h1 {
+  font-size: 8rem;
+  font-weight: 900;
+  margin-bottom: 0px;
+}
+
+.heading p {
+  font-size: 2rem;
+  margin-top: 0px;
+  font-weight: 500;
+}
+
+/* Three Images Section */
+.three-images-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0px; /* Adjust the gap between images */
+    margin-top: 40px;
+    margin-bottom: 200px;
+    perspective: 1000px; /* Add perspective for 3D effect */
+  }
+  
+  .three-images-section img {
+    width: 400px; /* Adjust the width of the images */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px;
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  /* Tilt the left image vertically (facing inward) */
+  .three-images-section .tilt-left {
+    transform: rotateY(50deg) translateX(-50px); /* Tilt left image inward and move it left */
+  }
+  
+  /* Tilt the right image vertically (facing inward) */
+  .three-images-section .tilt-right {
+    transform: rotateY(-50deg) translateX(50px); /* Tilt right image inward and move it right */
+  }
+  
+  /* Center image remains straight */
+  .three-images-section img:not(.tilt-left):not(.tilt-right) {
+    transform: rotateY(0deg); /* Ensure center image is straight */
+  }
+  
+  /* Hover effect for images */
+  .three-images-section img:hover {
+    transform: scale(1.1) rotateY(0deg); /* Slightly enlarge on hover and reset rotation */
+    z-index: 1; /* Bring the hovered image to the front */
+  }
+
+
+
+/* Image and Text Section */
+.image-text-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.image-text-section img {
+  width: 200px;
+  height: 200;
+  border-radius: 10px;
+}
+
+.image-text-section .text {
+  max-width: 600px;
+  text-align: left;
+}
+
+.image-text-section .text h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.image-text-section .text p {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+
+/* Button Container */
+.button-container {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 100px;
+  }
+  
+  .button-container button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button-container button:hover {
+    background-color: #0077cc;
+  }
+  
+  /* Table Container */
+  .table-container {
+    margin-top: 20px;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  
+  #fill-levels-table {
+    width: 50%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.2); /* Transparent background */
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  #fill-levels-table th,
+  #fill-levels-table td {
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+  }
+  
+  #fill-levels-table th {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+
+/* Debug Message */
+.debug-message {
+    text-align: center;
+    margin-top: 20px;
+    color: red;
+    font-size: 1.2rem;
+  }
+
+/* 
+  --------------
+  DARK THEME FOR STARTING LOCATION FORM
+  --------------
+*/
+
+.dark-starting-location-container {
+  background-color: #1b1b1b; /* Dark background */
+  width: 80%;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+.dark-starting-location-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #58a6ff; /* Bright blue for heading */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dark-input-group {
+  margin: 15px 0;
+  text-align: left;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dark-input-group label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  color: #ccc; /* Light gray text */
+}
+
+.dark-input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+  transition: border 0.3s ease;
+}
+
+.dark-input-group input::placeholder {
+  color: #888;
+}
+
+.dark-input-group input:focus {
+  border-color: #58a6ff; /* Blue focus border */
+  outline: none;
+}
+
+.dark-plan-route-button {
+  padding: 12px 30px;
+  font-size: 1rem;
+  background-color: #58a6ff; /* Blue background */
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.dark-plan-route-button:hover {
+  background-color: #1e90ff; /* Slightly different shade on hover */
+}
+
+/* 
+  --------------
+  DARK THEME TIMELINE
+  --------------
+*/
+
+.dark-route-text {
+  width: 80%;
+  margin: 30px auto;
+  /* We won't set a background here so it can blend with the page. 
+     The container inside will have its own styling. */
+}
+
+.timeline-container {
+  background-color: #1b1b1b; /* Dark background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  color: #f5f5f5; /* Light text */
+  border: 1px solid #2a2a2a; /* Subtle border */
+}
+
+.timeline-heading {
+  font-size: 1.5rem;
+  color: #58a6ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.timeline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  /* We'll add a vertical line on the left using a pseudo-element */
+}
+
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #58a6ff; /* Blue vertical line */
+  border-radius: 2px;
+}
+
+.timeline-item {
+  position: relative;
+  margin: 20px 0;
+  padding-left: 60px; /* space for the line & point */
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 13px; /* halfway across the line (20 + 4 / 2) */
+  width: 14px;
+  height: 14px;
+  background-color: #58a6ff; /* Blue circle */
+  border-radius: 50%;
+  top: 0;
+  transform: translateY(4px);
+}
+
+.timeline-point {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #58a6ff;
+  margin-bottom: 5px;
+}
+
+.timeline-content {
+  background: #2a2a2a;
+  padding: 12px 15px;
+  border-radius: 5px;
+  color: #ddd;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+.timeline-summary {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  color: #fff;  /* Change to match dark theme */
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-icon {
+  width: 24px;  /* Adjust size as needed */
+  height: 24px;
+  filter: brightness(0) invert(1); /* Makes the icon white on dark theme */
+}
+
+/* Map Container */
+.map-container {
+  height: 400px;
+  width: 80%;
+  margin: 30px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Status - BlueBin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='status.css') }}">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="app-bar">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='img/logo4.png') }}" alt="BlueBin Logo">
+      <span>BlueBin</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('login') }}">Home</a></li>
+      <li><a href="{{ url_for('status') }}" class="active">Status</a></li>
+      <li><a href="{{ url_for('location') }}">Location</a></li>
+      <li><a href="{{ url_for('schema') }}">Schema</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Heading -->
+    <div class="heading">
+      <h1>AUTOMATING</h1>
+      <p>THE WASTE COLLECTION PLANNING</p>
+    </div>
+
+    <div class="three-images-section">
+        <img src="{{ url_for('static', filename='img/ard3.jpg') }}" alt="Left Image" class="tilt-left">
+        <img src="{{ url_for('static', filename='img/opt.jpg') }}" alt="Center Image">
+        <img src="{{ url_for('static', filename='img/route2.jpg') }}" alt="Right Image" class="tilt-right">
+      </div>
+    
+
+    <!-- Image and Text Section -->
+    <div class="image-text-section">
+      <img src="{{ url_for('static', filename='img/clock.jpg') }}" alt="Time Image">
+      <div class="text">
+        <h2>Reduces the Waste Collection Time</h2>
+        <p>Tracks bin fill levels in real-time to ensure timely collection and avoid unnecessary trips.</p>
+      </div>
+    </div>
+
+    <!-- Additional Text Section -->
+    <div class="image-text-section">
+        
+      <div class="text">
+        <h2>Reduces Fuel and Cost</h2>
+        <p>Reduces fuel by traveling minimum distance to collect waste and also cost.</p>
+      </div>
+      <img src="{{ url_for('static', filename='img/fuel.jpg') }}" alt="Time Image">
+    </div>
+
+        <!-- Check Fill Levels Button -->
+    <div class="button-container">
+        <form method="POST" action="{{ url_for('status') }}">
+          <button type="submit">Check Fill Levels</button>
+        </form>
+      </div>
+  
+      <!-- Table to Display Data -->
+        {% if fill_levels %}
+        <div class="table-container">
+        <table id="fill-levels-table">
+            <thead>
+            <tr>
+                <th>Location Name</th>
+                <th>Fill Level (%)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for level in fill_levels %}
+            <tr>
+                <td>{{ level.LOCATION_NAME }}</td>
+                <td>{{ level.LAST_FILL_LEVEL }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% else %}
+        
+        {% endif %}
+
+        <!-- Starting Location Form (Dark Theme) -->
+        <div class="dark-starting-location-container">
+          <h2 class="dark-starting-location-heading">Starting Location</h2>
+          <form id="startingLocationForm" method="POST" action="/calculate">
+            <div class="dark-input-group">
+              <label for="locationName">Location Name:</label>
+              <input type="text" id="locationName" name="locationName" placeholder="Enter your starting location" required>
+            </div>
+            <div class="dark-input-group">
+              <label for="latitude">Latitude:</label>
+              <input type="text" id="latitude" name="latitude" placeholder="e.g., 13.0827" required>
+            </div>
+            <div class="dark-input-group">
+              <label for="longitude">Longitude:</label>
+              <input type="text" id="longitude" name="longitude" placeholder="e.g., 80.2707" required>
+            </div>
+            <button type="submit" class="dark-plan-route-button">Plan Route</button>
+          </form>
+        </div>
+
+        <!-- Route Details (Dark Timeline) -->
+        <div id="routeDetailsContainer" class="dark-route-text">
+          <!-- JavaScript will dynamically inject the timeline here -->
+        </div>
+
+    
+        <!-- Route Details -->
+        
+    
+        <!-- Leaflet Map -->
+       
+        <h2 style="margin-bottom: 40px;margin-top: 90px;font-size: 3rem;">ROUTE VISUALIZATION</h2>
+          
+        
+        <div id="map" style="height: 400px; width: 100%;"></div>
+    
+        <script>
+          // Initialize the map
+          const map = L.map('map').setView([13.0827, 80.2707], 13);  // Chennai coordinates
+    
+          // Add OpenStreetMap tiles
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(map);
+    
+
+        function calculateRoute() {
+        const locationName = document.getElementById('locationName').value;
+        const latitude = parseFloat(document.getElementById('latitude').value);
+        const longitude = parseFloat(document.getElementById('longitude').value);
+
+        if (!locationName || isNaN(latitude) || isNaN(longitude)) {
+          alert("Please enter a valid location name and coordinates.");
+          return;
+        }
+
+        fetch('/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `latitude=${latitude}&longitude=${longitude}&locationName=${encodeURIComponent(locationName)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+          if ('error' in data) {
+            alert(data['error']);
+          } else {
+            const routeDetailsContainer = document.getElementById('routeDetailsContainer');
+
+            // Build the timeline HTML
+            let timelineHTML = `
+              <div class="timeline-container">
+                <h2 class="timeline-heading">ORDER OF DELIVERY LOCATIONS</h2>
+                <ul class="timeline-list">
+            `;
+
+            // The first item is always the "Start"
+            timelineHTML += `
+              <li class="timeline-item">
+                <div class="timeline-point">Point 1</div>
+                <div class="timeline-content">${data['order_of_locations'][0]}</div>
+              </li>
+            `;
+
+            // The rest of the locations
+            data['order_of_locations'].slice(1).forEach((loc, index) => {
+              timelineHTML += `
+                <li class="timeline-item">
+                  <div class="timeline-point">Point ${index + 2}</div>
+                  <div class="timeline-content">${loc}</div>
+                </li>
+              `;
+            });
+
+            timelineHTML += `
+              </ul>
+              <div class="timeline-summary">
+                  <div class="summary-item">
+                      <img src="/static/img/fix.jpg" alt="Distance" class="summary-icon">
+                      <span><strong>Total Distance:</strong> ${parseFloat(data['total_distance'] / 1000).toFixed(2)} km</span>
+                  </div>
+                  <div class="summary-item">
+                      <img src="/static/img/clock.jpg" alt="Duration" class="summary-icon">
+                      <span><strong>Total Duration:</strong> ${formatDuration(data['total_duration'])}</span>
+                  </div>
+              </div>
+          </div>
+          `;
+          function formatDuration(durationInMinutes) {
+            let hours = Math.floor(durationInMinutes / 60);
+            let minutes = Math.round(durationInMinutes % 60);
+            return hours > 0 ? `${hours} hr ${minutes} min` : `${minutes} min`;
+        }
+
+            // Inject the timeline into the container
+            routeDetailsContainer.innerHTML = timelineHTML;
+
+            // Visualize route on the map
+            visualizeRoute(data['route_geometry'], data['dustbin_locations']);
+          }
+        })
+
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to calculate route.');
+        });
+      }
+
+      function visualizeRoute(routeGeometry, dustbinLocations) {
+        map.eachLayer(layer => {
+          if (layer instanceof L.Polyline || layer instanceof L.Marker) {
+            map.removeLayer(layer);
+          }
+        });
+
+        const routeCoordinates = routeGeometry.map(coord => [coord[1], coord[0]]);
+        L.polyline(routeCoordinates, { color: '#FF1C1C', weight: 5, opacity: 0.8 }).addTo(map);
+
+        dustbinLocations.forEach(location => {
+          const [lon, lat] = location['location'];
+          L.marker([lat, lon]).addTo(map)
+            .bindPopup(`<b>${location['name']}</b><br>Fill Level: ${location['fill_level']}%`);
+        });
+
+        const bounds = L.latLngBounds(routeCoordinates);
+        map.fitBounds(bounds, { padding: [20, 20] });
+      }
+
+      document.getElementById('startingLocationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        calculateRoute();
+      });
+        </script>
+    
+
+  </div>
+</body>
+</html>
